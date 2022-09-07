@@ -120,15 +120,8 @@ class MainActivity : AppCompatActivity() {
                     val base64List = qBase64Service.getBase64List().execute().body()
                         ?: throw IllegalStateException("question body null")
                     Log.d("問いデータ作成開始", System.currentTimeMillis().toString())
-
-
-                    //取り敢えずEkiNarabe2のデータを使う
-//                    val qList =
-//                        DownloadMain.createQuestionList(base64List, getString(R.string.app_name))
                     val qList =
-                        DownloadMain.createQuestionList(base64List, "EkiNarabe2")
-
-
+                        DownloadMain.createQuestionList(base64List, getString(R.string.app_name))
                     Log.d("qService", "更新qList ${qList.size}")
                     //テーブル更新
                     Log.d("テーブル更新開始", System.currentTimeMillis().toString())
