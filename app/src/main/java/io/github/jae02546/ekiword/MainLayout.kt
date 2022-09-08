@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.google.android.gms.ads.AdSize
+import io.github.jae02546.ekiword.MainLayout.getThemeColor
 
 
 object MainLayout {
@@ -1148,9 +1149,9 @@ object MainLayout {
     }
 
     data class PiecePara(
-        var table: Boolean,
-        var ix: Int,
-        var iy: Int,
+        var table: Boolean = false,
+        var ix: Int = -1,
+        var iy: Int = -1,
     )
 
     fun getUpPiece(
@@ -1343,6 +1344,34 @@ object MainLayout {
                 tv.background = ld
             }
         }
+    }
+
+    //ピーステキスト選択
+    fun selectPieceText(layout: ConstraintLayout, piecePara: PiecePara, sel: Boolean) {
+        val ntc = layout.context.getThemeColor(R.attr.editTextColor)
+        val stc = if (sel) Color.RED else ntc
+        //テーブル
+        for (v in 0 until mAnswers) {
+            for (v2 in 0 until mItems) {
+                val tv = layout.findViewById<TextView>(tpPara[v][v2].id)
+                if (piecePara.table && v == piecePara.iy && v2 == piecePara.ix)
+                    tv.setTextColor(stc)
+                else
+                    tv.setTextColor(ntc)
+            }
+        }
+        //持ち札
+        for (v in 0 until mCardRows) {
+            for (v2 in 0 until mItems) {
+                val tv = layout.findViewById<TextView>(cpPara[v][v2].id)
+                if (!piecePara.table && v == piecePara.iy && v2 == piecePara.ix)
+                    tv.setTextColor(stc)
+                else
+                    tv.setTextColor(ntc)
+            }
+        }
+
+
     }
 
 
