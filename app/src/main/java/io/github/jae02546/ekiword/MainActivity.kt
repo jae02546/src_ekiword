@@ -231,12 +231,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         val cursor = findViewById<TextView>(MainLayout.mcPara[0][0].id)
-        var drag = false //true ドラッグ中
+        var drag = false //ドラッグ中
         var downX = 0f
         var downY = 0f
         var empty = false
         val fosX = .0f //指に隠れないためのoffset
         val fosY = .4f //指に隠れないためのoffset
+        var sel = false //選択中
 
         //table piece イベント
         for (v in 0 until MainLayout.tpPara.count()) {
@@ -339,6 +340,13 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 //カーソル位置のピースを選択状態にする
                                 MainLayout.selectPiece(mLayout, movePiece)
+                                //ピースが違う場合はsel解除
+                                if (!movePiece.table || movePiece.ix != v2 || movePiece.iy != v) {
+                                    sel = false
+
+
+
+                                }
                             }
                         }
                         MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_OUTSIDE -> {
@@ -357,23 +365,32 @@ class MainActivity : AppCompatActivity() {
                                     cursor.x.toInt(),
                                     cursor.y.toInt(),
                                 )
-                                //ピース入替
-                                //MainLayout.swapPiece(mLayout, pNo, downPiece, upPiece)
-                                Tools.swapLastStateTblPiece(this, pNo, downPiece, upPiece)
-                                //再表示
-                                MainLayout.showLayout(mLayout, pNo, false)
-                                //comp判断
-                                if (Tools.isComp(this, pNo)) {
-                                    //compの場合はスコア更新してcomp画面表示
-                                    Tools.incCompCount(this, pNo)
-                                    showCompLayout(screenSize, pNo)
+                                if (downPiece != upPiece) {
+                                    //ピース入替
+                                    //MainLayout.swapPiece(mLayout, pNo, downPiece, upPiece)
+                                    Tools.swapLastStateTblPiece(this, pNo, downPiece, upPiece)
                                     //再表示
                                     MainLayout.showLayout(mLayout, pNo, false)
-                                    //効果音とバイブ
-                                    soundVibrator(true)
+                                    //comp判断
+                                    if (Tools.isComp(this, pNo)) {
+                                        //compの場合はスコア更新してcomp画面表示
+                                        Tools.incCompCount(this, pNo)
+                                        showCompLayout(screenSize, pNo)
+                                        //再表示
+                                        MainLayout.showLayout(mLayout, pNo, false)
+                                        //効果音とバイブ
+                                        soundVibrator(true)
+                                    } else {
+                                        //効果音とバイブ
+                                        soundVibrator(false)
+                                    }
                                 } else {
-                                    //効果音とバイブ
-                                    soundVibrator(false)
+                                    //選択状態反転
+                                    sel = !sel
+
+
+
+
                                 }
                             }
                             drag = false
