@@ -17,7 +17,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.google.android.gms.ads.AdSize
-import io.github.jae02546.ekiword.MainLayout.getThemeColor
 
 
 object MainLayout {
@@ -1168,10 +1167,10 @@ object MainLayout {
             val w: Int,
             val h: Int,
         )
-        //answer offset
-        val aosX = layout.findViewById<ConstraintLayout>(mPara[2][0].id).x
-        var aosY = layout.findViewById<ConstraintLayout>(mPara[2][0].id).y
-        aosY += layout.findViewById<ConstraintLayout>(tiPara[1][0].id).y
+        //table offset
+        val tosX = layout.findViewById<ConstraintLayout>(mPara[2][0].id).x
+        var tosY = layout.findViewById<ConstraintLayout>(mPara[2][0].id).y
+        tosY += layout.findViewById<ConstraintLayout>(tiPara[1][0].id).y
         //card offset
         val cosX = layout.findViewById<ConstraintLayout>(mPara[3][0].id).x
         var cosY = layout.findViewById<ConstraintLayout>(mPara[3][0].id).y
@@ -1183,10 +1182,10 @@ object MainLayout {
             for (v2 in 0 until tpPara[v].count()) {
                 val bar = layout.findViewById<TextView>(tpPara[v][v2].id)
                 foo += PosSize(
-                    (aosX + bar.x).toInt(),
-                    (aosY + bar.y).toInt(),
-                    (aosX + bar.x + bar.width).toInt(),
-                    (aosY + bar.y + bar.height).toInt(),
+                    (tosX + bar.x).toInt(),
+                    (tosY + bar.y).toInt(),
+                    (tosX + bar.x + bar.width).toInt(),
+                    (tosY + bar.y + bar.height).toInt(),
                     bar.width,
                     bar.height
                 )

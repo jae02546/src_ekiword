@@ -246,9 +246,9 @@ class MainActivity : AppCompatActivity() {
                 val tapTp = findViewById<TextView>(MainLayout.tpPara[v][v2].id)
                 tapTp.setOnTouchListener { _, event ->
                     //offset取得
-                    val apOffsetX = findViewById<ConstraintLayout>(MainLayout.mPara[2][0].id).x
-                    var apOffsetY = findViewById<ConstraintLayout>(MainLayout.mPara[2][0].id).y
-                    apOffsetY += findViewById<ConstraintLayout>(MainLayout.tiPara[1][0].id).y
+                    val tpOffsetX = findViewById<ConstraintLayout>(MainLayout.mPara[2][0].id).x
+                    var tpOffsetY = findViewById<ConstraintLayout>(MainLayout.mPara[2][0].id).y
+                    tpOffsetY += findViewById<ConstraintLayout>(MainLayout.tiPara[1][0].id).y
                     //pNo、comp状態取得
                     var pNo = 0
                     var comp = false
@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.pref_playerNo_defaultValue).toInt()
                     )
                     comp = Tools.isComp(this, pNo)
-                    //タップ時文字位置設定
+                    //タップ時文字位置設定取得
                     val charPosNo = Tools.getPrefInt(
                         this,
                         getString(R.string.setting_charPosNo_key),
@@ -266,13 +266,13 @@ class MainActivity : AppCompatActivity() {
                     )
                     cursor.gravity =
                         when (charPosNo) {
-                            0 -> {
+                            1 -> {
                                 Gravity.START + Gravity.TOP
                             }
-                            1 -> {
+                            2 -> {
                                 Gravity.CENTER_HORIZONTAL + Gravity.TOP
                             }
-                            2 -> {
+                            3 -> {
                                 Gravity.END + Gravity.TOP
                             }
                             else -> {
@@ -292,17 +292,17 @@ class MainActivity : AppCompatActivity() {
                                 downX = event.x
                                 downY = event.y
                                 when (charPosNo) {
-                                    0, 1, 2 -> {
+                                    1, 2, 3 -> {
                                         cursor.x =
-                                            apOffsetX + tapTp.x - (tapTp.width * fosX).toInt() //- (tapTp.width - downX)
+                                            tpOffsetX + tapTp.x - (tapTp.width * fosX).toInt() //- (tapTp.width - downX)
                                         cursor.y =
-                                            apOffsetY + tapTp.y - (tapTp.height * fosY).toInt() - (tapTp.height - downY)
+                                            tpOffsetY + tapTp.y - (tapTp.height * fosY).toInt() - (tapTp.height - downY)
                                     }
                                     else -> {
                                         cursor.x =
-                                            apOffsetX + tapTp.x //- (tapTp.width * fosX).toInt()
+                                            tpOffsetX + tapTp.x //- (tapTp.width * fosX).toInt()
                                         cursor.y =
-                                            apOffsetY + tapTp.y //- (tapTp.height * fosY).toInt()
+                                            tpOffsetY + tapTp.y //- (tapTp.height * fosY).toInt()
                                     }
                                 }
                                 empty = tapTp.text == ""
@@ -319,17 +319,17 @@ class MainActivity : AppCompatActivity() {
                         MotionEvent.ACTION_MOVE -> {
                             if (!comp) {
                                 when (charPosNo) {
-                                    0, 1, 2 -> {
+                                    1, 2, 3 -> {
                                         cursor.x =
-                                            apOffsetX + tapTp.x + (event.x - downX) - (tapTp.width * fosX).toInt() //- (tapTp.width - downX)
+                                            tpOffsetX + tapTp.x + (event.x - downX) - (tapTp.width * fosX).toInt() //- (tapTp.width - downX)
                                         cursor.y =
-                                            apOffsetY + tapTp.y + (event.y - downY) - (tapTp.height * fosY).toInt() - (tapTp.height - downY)
+                                            tpOffsetY + tapTp.y + (event.y - downY) - (tapTp.height * fosY).toInt() - (tapTp.height - downY)
                                     }
                                     else -> {
                                         cursor.x =
-                                            apOffsetX + tapTp.x + (event.x - downX) //- (tapTp.width * fosX).toInt()
+                                            tpOffsetX + tapTp.x + (event.x - downX) //- (tapTp.width * fosX).toInt()
                                         cursor.y =
-                                            apOffsetY + tapTp.y + (event.y - downY) //- (tapTp.height * fosY).toInt()
+                                            tpOffsetY + tapTp.y + (event.y - downY) //- (tapTp.height * fosY).toInt()
                                     }
                                 }
                                 //カーソル位置のピースを選択表示にする
@@ -366,18 +366,19 @@ class MainActivity : AppCompatActivity() {
                                     cursor.y.toInt(),
                                 )
                                 if (!empty) {
-                                    if (downPiece != upPiece) {
+                                    //何故か-1が返ってくる場合があるので?
+                                    if (upPiece.ix >= 0 && upPiece.iy >= 0 && downPiece != upPiece) {
+                                        //if (downPiece != upPiece) {
                                         //ピース入替
                                         Tools.swapLastStateTblPiece(this, pNo, downPiece, upPiece)
                                         //再表示
                                         MainLayout.showLayout(mLayout, pNo, false)
                                         //comp判断
                                         if (Tools.isComp(this, pNo)) {
-                                            //compの場合はスコア更新してcomp画面表示
+                                            //compの場合はスコア更新、再表示、comp画面表示
                                             Tools.incCompCount(this, pNo)
-                                            showCompLayout(screenSize, pNo)
-                                            //再表示
                                             MainLayout.showLayout(mLayout, pNo, false)
+                                            showCompLayout(screenSize, pNo)
                                             //効果音とバイブ
                                             soundVibrator(true)
                                         } else {
@@ -402,17 +403,28 @@ class MainActivity : AppCompatActivity() {
                                             //再表示
                                             MainLayout.selectPieceText(mLayout, upPiece, sel)
                                             MainLayout.showLayout(mLayout, pNo, false)
-                                            //効果音とバイブ
-                                            soundVibrator(false)
+                                            //comp判断
+                                            if (Tools.isComp(this, pNo)) {
+                                                //compの場合はスコア更新、再表示、comp画面表示
+                                                Tools.incCompCount(this, pNo)
+                                                MainLayout.showLayout(mLayout, pNo, false)
+                                                showCompLayout(screenSize, pNo)
+                                                //効果音とバイブ
+                                                soundVibrator(true)
+                                            } else {
+                                                //効果音とバイブ
+                                                soundVibrator(false)
+                                            }
                                         } else {
                                             //選択状態反転、空文字列の場合は処理しないのでここで大丈夫
-                                            sel = !sel
+                                            if (charPosNo == 0) {
+                                                //タッチで選択は調整無しの場合のみ
+                                                sel = !sel
+                                            }
                                             //再表示
                                             MainLayout.selectPieceText(mLayout, upPiece, sel)
                                             MainLayout.showLayout(mLayout, pNo, false)
                                         }
-//                                        //効果音とバイブ
-//                                        soundVibrator(false)
                                     }
                                 } else {
                                     //選択状態でupとselが違う場合は入替
@@ -429,8 +441,18 @@ class MainActivity : AppCompatActivity() {
                                         //再表示
                                         MainLayout.selectPieceText(mLayout, upPiece, sel)
                                         MainLayout.showLayout(mLayout, pNo, false)
-                                        //効果音とバイブ
-                                        soundVibrator(false)
+                                        //comp判断
+                                        if (Tools.isComp(this, pNo)) {
+                                            //compの場合はスコア更新、再表示、comp画面表示
+                                            Tools.incCompCount(this, pNo)
+                                            MainLayout.showLayout(mLayout, pNo, false)
+                                            showCompLayout(screenSize, pNo)
+                                            //効果音とバイブ
+                                            soundVibrator(true)
+                                        } else {
+                                            //効果音とバイブ
+                                            soundVibrator(false)
+                                        }
                                     }
                                 }
                             }
@@ -467,7 +489,7 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.pref_playerNo_defaultValue).toInt()
                     )
                     comp = Tools.isComp(this, pNo)
-                    //タップ時文字位置設定
+                    //タップ時文字位置設定取得
                     val charPosNo = Tools.getPrefInt(
                         this,
                         getString(R.string.setting_charPosNo_key),
@@ -475,13 +497,13 @@ class MainActivity : AppCompatActivity() {
                     )
                     cursor.gravity =
                         when (charPosNo) {
-                            0 -> {
+                            1 -> {
                                 Gravity.START + Gravity.TOP
                             }
-                            1 -> {
+                            2 -> {
                                 Gravity.CENTER_HORIZONTAL + Gravity.TOP
                             }
-                            2 -> {
+                            3 -> {
                                 Gravity.END + Gravity.TOP
                             }
                             else -> {
@@ -512,25 +534,25 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     .show()
                             } else {
-                                empty = tapCp.text == ""
-                                //空文字列は無視
-                                if (!empty) {
-                                    downX = event.x
-                                    downY = event.y
-                                    when (charPosNo) {
-                                        0, 1, 2 -> {
-                                            cursor.x =
-                                                cpOffsetX + tapCp.x - (tapCp.width * fosX).toInt() //- (tapCp.width - downX)
-                                            cursor.y =
-                                                cpOffsetY + tapCp.y - (tapCp.height * fosY).toInt() - (tapCp.height - downY)
-                                        }
-                                        else -> {
-                                            cursor.x =
-                                                cpOffsetX + tapCp.x //- (tapCp.width * fosX).toInt()
-                                            cursor.y =
-                                                cpOffsetY + tapCp.y //- (tapCp.height * fosY).toInt()
-                                        }
+                                downX = event.x
+                                downY = event.y
+                                when (charPosNo) {
+                                    1, 2, 3 -> {
+                                        cursor.x =
+                                            cpOffsetX + tapCp.x - (tapCp.width * fosX).toInt() //- (tapCp.width - downX)
+                                        cursor.y =
+                                            cpOffsetY + tapCp.y - (tapCp.height * fosY).toInt() - (tapCp.height - downY)
                                     }
+                                    else -> {
+                                        cursor.x =
+                                            cpOffsetX + tapCp.x //- (tapCp.width * fosX).toInt()
+                                        cursor.y =
+                                            cpOffsetY + tapCp.y //- (tapCp.height * fosY).toInt()
+                                    }
+                                }
+                                empty = tapCp.text == ""
+                                //空文字列で無い場合はカーソル表示
+                                if (!empty) {
                                     cursor.text = tapCp.text
                                     cursor.isVisible = true
                                     tapCp.text = ""
@@ -540,9 +562,9 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         MotionEvent.ACTION_MOVE -> {
-                            if (!comp && !empty) {
+                            if (!comp) {
                                 when (charPosNo) {
-                                    0, 1, 2 -> {
+                                    1, 2, 3 -> {
                                         cursor.x =
                                             cpOffsetX + tapCp.x + (event.x - downX) - (tapCp.width * fosX).toInt() //- (tapCp.width - downX)
                                         cursor.y =
@@ -555,24 +577,30 @@ class MainActivity : AppCompatActivity() {
                                             cpOffsetY + tapCp.y + (event.y - downY) //- (tapCp.height * fosY).toInt()
                                     }
                                 }
-                                //カーソル位置のピース取得
-                                val movePiece = MainLayout.getUpPiece(
-                                    mLayout,
-                                    MainLayout.PiecePara(false, v2, v),
-                                    cursor.x.toInt(),
-                                    cursor.y.toInt(),
-                                )
-                                //カーソル位置のピースを選択状態にする
-                                MainLayout.selectPiece(mLayout, movePiece)
+                                //カーソル位置のピースを選択表示にする
+                                if (!empty) {
+                                    //カーソル位置のピース取得
+                                    val movePiece = MainLayout.getUpPiece(
+                                        mLayout,
+                                        MainLayout.PiecePara(false, v2, v),
+                                        cursor.x.toInt(),
+                                        cursor.y.toInt(),
+                                    )
+                                    //カーソル選択表示
+                                    MainLayout.selectPiece(mLayout, movePiece)
+                                }
                             }
                         }
                         MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_OUTSIDE -> {
-                            if (!comp && !empty) {
-                                //選択解除
-                                MainLayout.deselectPiece(mLayout)
+                            //ドラッグかタップかの判断は?
+                            //down up で別のピース selは解除
+                            //down up で同じピースで1つの前のピースもdown up で同じピースで選択されている
+                            if (!comp) {
                                 //mc非表示
                                 cursor.isVisible = false
                                 cursor.text = ""
+                                //選択解除
+                                MainLayout.deselectPiece(mLayout)
                                 //downピース
                                 val downPiece = MainLayout.PiecePara(false, v2, v)
                                 //upピース取得
@@ -582,26 +610,100 @@ class MainActivity : AppCompatActivity() {
                                     cursor.x.toInt(),
                                     cursor.y.toInt(),
                                 )
-                                //ピース入替
-                                //MainLayout.swapPiece(mLayout, pNo, downPiece, upPiece)
-                                Tools.swapLastStateTblPiece(this, pNo, downPiece, upPiece)
-                                //再表示
-                                MainLayout.showLayout(mLayout, pNo, false)
-                                //comp判断
-                                if (Tools.isComp(this, pNo)) {
-                                    //compの場合はスコア更新してcomp画面表示
-                                    Tools.incCompCount(this, pNo)
-                                    showCompLayout(screenSize, pNo)
-                                    //再表示
-                                    MainLayout.showLayout(mLayout, pNo, false)
-                                    //効果音とバイブ
-                                    soundVibrator(true)
+
+                                if (!empty) {
+                                    //何故か-1が返ってくる場合があるので?
+                                    if (upPiece.ix >= 0 && upPiece.iy >= 0 && downPiece != upPiece) {
+                                        //if (downPiece != upPiece) {
+                                        //ピース入替
+                                        Tools.swapLastStateTblPiece(this, pNo, downPiece, upPiece)
+                                        //再表示
+                                        MainLayout.showLayout(mLayout, pNo, false)
+                                        //comp判断
+                                        if (Tools.isComp(this, pNo)) {
+                                            //compの場合はスコア更新、再表示、comp画面表示
+                                            Tools.incCompCount(this, pNo)
+                                            MainLayout.showLayout(mLayout, pNo, false)
+                                            showCompLayout(screenSize, pNo)
+                                            //効果音とバイブ
+                                            soundVibrator(true)
+                                        } else {
+                                            //効果音とバイブ
+                                            soundVibrator(false)
+                                        }
+                                        //選択解除
+                                        sel = false
+                                        MainLayout.selectPieceText(mLayout, upPiece, sel)
+                                    } else {
+                                        //選択状態でupとselが違う場合は入替
+                                        if (sel && upPiece != selPiece) {
+                                            //選択解除
+                                            sel = false
+                                            //ピース入替
+                                            Tools.swapLastStateTblPiece(
+                                                this,
+                                                pNo,
+                                                selPiece,
+                                                upPiece
+                                            )
+                                            //再表示
+                                            MainLayout.selectPieceText(mLayout, upPiece, sel)
+                                            MainLayout.showLayout(mLayout, pNo, false)
+                                            //comp判断
+                                            if (Tools.isComp(this, pNo)) {
+                                                //compの場合はスコア更新、再表示、comp画面表示
+                                                Tools.incCompCount(this, pNo)
+                                                MainLayout.showLayout(mLayout, pNo, false)
+                                                showCompLayout(screenSize, pNo)
+                                                //効果音とバイブ
+                                                soundVibrator(true)
+                                            } else {
+                                                //効果音とバイブ
+                                                soundVibrator(false)
+                                            }
+                                        } else {
+                                            //選択状態反転、空文字列の場合は処理しないのでここで大丈夫
+                                            if (charPosNo == 0) {
+                                                //タッチで選択は調整無しの場合のみ
+                                                sel = !sel
+                                            }
+                                            //再表示
+                                            MainLayout.selectPieceText(mLayout, upPiece, sel)
+                                            MainLayout.showLayout(mLayout, pNo, false)
+                                        }
+                                    }
                                 } else {
-                                    //効果音とバイブ
-                                    soundVibrator(false)
+                                    //選択状態でupとselが違う場合は入替
+                                    if (sel && upPiece != selPiece) {
+                                        //選択解除
+                                        sel = false
+                                        //ピース入替
+                                        Tools.swapLastStateTblPiece(
+                                            this,
+                                            pNo,
+                                            selPiece,
+                                            upPiece
+                                        )
+                                        //再表示
+                                        MainLayout.selectPieceText(mLayout, upPiece, sel)
+                                        MainLayout.showLayout(mLayout, pNo, false)
+                                        //comp判断
+                                        if (Tools.isComp(this, pNo)) {
+                                            //compの場合はスコア更新、再表示、comp画面表示
+                                            Tools.incCompCount(this, pNo)
+                                            MainLayout.showLayout(mLayout, pNo, false)
+                                            showCompLayout(screenSize, pNo)
+                                            //効果音とバイブ
+                                            soundVibrator(true)
+                                        } else {
+                                            //効果音とバイブ
+                                            soundVibrator(false)
+                                        }
+                                    }
                                 }
                             }
                             drag = false
+                            selPiece = MainLayout.PiecePara(false, v2, v)
                         }
                     }
                     true
