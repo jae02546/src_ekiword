@@ -787,10 +787,6 @@ class MainActivity : AppCompatActivity() {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_main, menu)
 
-        //val bar: TextView = findViewById(R.id.t2)
-        //bar.height = 100
-
-
         return true
     }
 

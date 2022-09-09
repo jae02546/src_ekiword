@@ -693,10 +693,11 @@ object MainLayout {
         val child = com.google.android.gms.ads.AdView(layout.context)
         child.id = para[0][0].id
         child.setAdSize(AdSize.BANNER)
-        child.adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        child.adUnitId = "ca-app-pub-9480495509204975/8729103616"
         layout.addView(child)
 
         //test "ca-app-pub-3940256099942544/6300978111"
+        //本番  "ca-app-pub-9480495509204975/8729103616"
 
         val cs = ConstraintSet()
         cs.clone(layout)

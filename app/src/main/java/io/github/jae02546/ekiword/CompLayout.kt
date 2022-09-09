@@ -95,7 +95,7 @@ object CompLayout {
             iLayout += mLayout.getViewById(mPara[v][0].id) as ConstraintLayout
             iLayout[v] = MainLayout.getConstraintLayout(iLayout[v], vPara)
         }
-        //main内item内item1[ - ][廃駅][都道府県]
+        //main内item内item1[ - ][補足2->廃駅][補足3->都道府県]
         for (v in 0 until mAnswers) {
             val vPara: MutableList<MutableList<MainLayout.ItemPara>> = mutableListOf()
             for (v2 in 0..2) {
@@ -119,7 +119,7 @@ object CompLayout {
             var i1Layout = iLayout[v].getViewById(iPara[v][0][0].id) as ConstraintLayout
             i1Layout = MainLayout.getConstraintLayout(i1Layout, vPara)
         }
-        //main内item内item2[かな][駅名][ローマ字][補足3]
+        //main内item内item2[かな][駅名][ローマ字][補足1]
         val vWeight: MutableList<Float> = mutableListOf(1.0f, 1.0f, 1.0f, 1.0f)
         val fSize: MutableList<Float> = mutableListOf(10f, 0f, 10f, 10f)
         val fColor: MutableList<Int> =
