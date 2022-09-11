@@ -10,8 +10,6 @@ import android.text.method.LinkMovementMethod
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.HtmlCompat
@@ -93,15 +91,9 @@ object MainLayout {
         var text: String = "",
     )
 
-    @ColorInt
-    fun Context.getThemeColor(
-        @AttrRes themeAttrId: Int
-    ): Int {
-        return obtainStyledAttributes(
-            intArrayOf(themeAttrId)
-        ).use {
-            it.getColor(0, Color.TRANSPARENT)
-        }
+    fun getThemeColor(context: Context, color: Int): Int {
+        val foo = context.theme.obtainStyledAttributes(intArrayOf(color))
+        return foo.getColor(0, Color.TRANSPARENT)
     }
 
     //レイアウト作成
@@ -199,12 +191,10 @@ object MainLayout {
         val gdCursor = GradientDrawable()
         gdCursor.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-//            context.getThemeColor(R.attr.colorButtonNormal)
             Color.RED
         )
         val ldCursor = LayerDrawable(arrayOf<Drawable>(gdCursor))
         ldCursor.setLayerInset(0, 0, 0, 0, 0)
-//        val cCursor = context.getThemeColor(R.attr.editTextColor)
         val cCursor = Color.RED
         val wCursor =
             (screenSize[0] - (mMainMargin * 4) - (mViewMargin * (mItems * 2 + 2))) / mItems
@@ -238,7 +228,7 @@ object MainLayout {
         val gdScore = GradientDrawable()
         gdScore.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //bdScore.setColor(context.getThemeColor(R.attr.colorButtonNormal))
@@ -266,7 +256,7 @@ object MainLayout {
         val gdQuestion = GradientDrawable()
         gdQuestion.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //bdQuestion.setColor(context.getThemeColor(R.attr.colorButtonNormal))
@@ -333,7 +323,7 @@ object MainLayout {
         qlLayout = getConstraintLayout(qlLayout, qlPara)
 
         //question center [かな][駅名][ローマ字][補足1+2]
-        val qcColor = context.getThemeColor(R.attr.editTextColor)
+        val qcColor = getThemeColor(context, R.attr.editTextColor)
         val qcWeight: MutableList<Float> = mutableListOf(1.0f, 1.0f, 1.0f, 1.0f)
         val qcFontSize: MutableList<Float> = mutableListOf(10f, 0f, 10f, 10f)
         val qcGravity: MutableList<Int> =
@@ -392,7 +382,7 @@ object MainLayout {
         val gdAnswer = GradientDrawable()
         gdAnswer.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //bdAnswer.setColor(context.getThemeColor(R.attr.colorSecondaryVariant))
@@ -456,7 +446,8 @@ object MainLayout {
         val gdAnswerPiece = GradientDrawable()
         gdAnswerPiece.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+//            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //gdAnswerPiece.setColor(context.getThemeColor(R.attr.colorOnPrimary)) //これだ
@@ -467,7 +458,7 @@ object MainLayout {
         val gdAnswerPiece2 = GradientDrawable()
         gdAnswerPiece2.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //gdAnswerPiece.setColor(context.getThemeColor(R.attr.colorOnPrimary)) //これだ
@@ -475,7 +466,7 @@ object MainLayout {
         val ldAnswerPiece2 = LayerDrawable(arrayOf<Drawable>(gdAnswerPiece2))
         ldAnswerPiece2.setLayerInset(0, 0, 0, 0, 0)
 
-        val apc = context.getThemeColor(R.attr.editTextColor)
+        val apc = getThemeColor(context, R.attr.editTextColor)
         for (v in 0 until mAnswers) {
             val vPara: MutableList<ItemPara> = mutableListOf()
             for (v2 in 0 until mItems) {
@@ -502,7 +493,7 @@ object MainLayout {
         val gdCard = GradientDrawable()
         gdCard.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //bdPiece.setColor(context.getThemeColor(R.attr.colorPrimaryVariant))
@@ -566,13 +557,15 @@ object MainLayout {
         val gdCardPiece = GradientDrawable()
         gdCardPiece.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+//            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
-        gdCardPiece.setColor(context.getThemeColor(R.attr.colorOnPrimary)) //これだ
+//        gdCardPiece.setColor(context.getThemeColor(R.attr.colorOnPrimary)) //これだ
+        gdCardPiece.setColor(getThemeColor(context, R.attr.colorOnPrimary)) //これだ
         val ldCardPiece = LayerDrawable(arrayOf<Drawable>(gdCardPiece))
         ldCardPiece.setLayerInset(0, 0, 0, 0, 0)
-        val cpc = context.getThemeColor(R.attr.editTextColor)
+        val cpc = getThemeColor(context, R.attr.editTextColor)
         for (v in 0 until mCardRows) {
             val vPara: MutableList<ItemPara> = mutableListOf()
             for (v2 in 0 until mItems) {
@@ -599,7 +592,7 @@ object MainLayout {
         val gdNewGame = GradientDrawable()
         gdNewGame.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         //塗りつぶしはコメントを外す
         //bdNewGame.setColor(context.getThemeColor(R.attr.colorButtonNormal))
@@ -1243,11 +1236,12 @@ object MainLayout {
     //ピース選択
     fun selectPiece(layout: ConstraintLayout, selPiece: PiecePara) {
         //選択ピース以外は通常表示
+        val cbn = getThemeColor(layout.context, R.attr.colorButtonNormal)
         //Layer normal
         val gd = GradientDrawable()
         gd.setStroke(
             Tools.convertDp2Px(1f, layout.context).toInt(),
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
         val ld = LayerDrawable(arrayOf<Drawable>(gd))
         ld.setLayerInset(0, 0, 0, 0, 0)
@@ -1255,7 +1249,7 @@ object MainLayout {
         val gdOdd = GradientDrawable()
         gdOdd.setStroke(
             Tools.convertDp2Px(1f, layout.context).toInt(),
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
         gdOdd.setColor(oddColor)
         val ldOdd = LayerDrawable(arrayOf<Drawable>(gdOdd))
@@ -1264,7 +1258,7 @@ object MainLayout {
         val gdEven = GradientDrawable()
         gdEven.setStroke(
             Tools.convertDp2Px(1f, layout.context).toInt(),
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
         gdEven.setColor(evenColor)
         val ldEven = LayerDrawable(arrayOf<Drawable>(gdEven))
@@ -1275,9 +1269,9 @@ object MainLayout {
             Tools.convertDp2Px(1f, layout.context).toInt(),
             //Color.RED
             //Color.BLUE
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
-        gdSel.setColor(layout.context.getThemeColor(R.attr.colorButtonNormal))
+        gdSel.setColor(cbn)
         val ldSel = LayerDrawable(arrayOf<Drawable>(gdSel))
         ldSel.setLayerInset(0, 0, 0, 0, 0)
         //テーブル
@@ -1304,11 +1298,12 @@ object MainLayout {
 
     //ピース選択解除
     fun deselectPiece(layout: ConstraintLayout) {
+        val cbn = getThemeColor(layout.context, R.attr.colorButtonNormal)
         //Layer normal
         val gd = GradientDrawable()
         gd.setStroke(
             Tools.convertDp2Px(1f, layout.context).toInt(),
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
         val ld = LayerDrawable(arrayOf<Drawable>(gd))
         ld.setLayerInset(0, 0, 0, 0, 0)
@@ -1316,7 +1311,7 @@ object MainLayout {
         val gdOdd = GradientDrawable()
         gdOdd.setStroke(
             Tools.convertDp2Px(1f, layout.context).toInt(),
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
         gdOdd.setColor(oddColor)
         val ldOdd = LayerDrawable(arrayOf<Drawable>(gdOdd))
@@ -1325,7 +1320,7 @@ object MainLayout {
         val gdEven = GradientDrawable()
         gdEven.setStroke(
             Tools.convertDp2Px(1f, layout.context).toInt(),
-            layout.context.getThemeColor(R.attr.colorButtonNormal)
+            cbn
         )
         gdEven.setColor(evenColor)
         val ldEven = LayerDrawable(arrayOf<Drawable>(gdEven))
@@ -1348,7 +1343,7 @@ object MainLayout {
 
     //ピーステキスト選択
     fun selectPieceText(layout: ConstraintLayout, piecePara: PiecePara, sel: Boolean) {
-        val ntc = layout.context.getThemeColor(R.attr.editTextColor)
+        val ntc = getThemeColor(layout.context, R.attr.editTextColor)
         val stc = if (sel) Color.RED else ntc
         //テーブル
         for (v in 0 until mAnswers) {

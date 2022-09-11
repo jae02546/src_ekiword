@@ -44,7 +44,7 @@ object CompLayout {
         val gd = GradientDrawable()
         gd.setStroke(
             Tools.convertDp2Px(1f, context).toInt(),
-            context.getThemeColor(R.attr.colorButtonNormal)
+            getThemeColor(context, R.attr.colorButtonNormal)
         )
         val ldTopBottom = LayerDrawable(arrayOf<Drawable>(gd))
         ldTopBottom.setLayerInset(0, -10, 0, -10, 0)
@@ -123,7 +123,7 @@ object CompLayout {
         val vWeight: MutableList<Float> = mutableListOf(1.0f, 1.0f, 1.0f, 1.0f)
         val fSize: MutableList<Float> = mutableListOf(10f, 0f, 10f, 10f)
         val fColor: MutableList<Int> =
-            mutableListOf(0, context.getThemeColor(R.attr.editTextColor), 0, 0)
+            mutableListOf(0, getThemeColor(context, R.attr.editTextColor), 0, 0)
         val gravity: MutableList<Int> =
             mutableListOf(
                 Gravity.CENTER_HORIZONTAL + Gravity.BOTTOM,
