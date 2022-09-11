@@ -56,7 +56,7 @@
 
     <!--設定 バイブレーション-->
     <string name="setting_vibrationNo_key">setting_vibration</string>
-    <string name="setting_vibrationNo_defaultValue">1</string>
+    <string name="setting_vibrationNo_defaultValue">0</string>
     <string name="setting_vibration_title">バイブレーション</string>
     <string name="setting_vibration_entries_comp_drag">タップとコンプ</string>
     <string name="setting_vibration_entries_comp">コンプのみ</string>
