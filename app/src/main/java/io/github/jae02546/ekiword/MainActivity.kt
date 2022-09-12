@@ -175,7 +175,6 @@ class MainActivity : AppCompatActivity() {
                 val tapS = findViewById<TextView>(MainLayout.sPara[v][v2].id)
                 tapS.setOnClickListener {
                     //Toast.makeText(this, "s$v$v2", Toast.LENGTH_SHORT).show()
-
                     //10回タップされたら次回起動時保守モード
                     if (mCnt >= 10) {
                         val et = EditText(this)
