@@ -224,25 +224,47 @@ object Tools {
             //移動先が空きで無い場合は挿入して移動元を空きに
             val insStr = fromList[downPiece.iy][downPiece.ix]
             fromList[downPiece.iy][downPiece.ix] = ""
-            //挿入位置から右方向に空きを探す
+
+            //挿入位置から左方向に空きを探す
             var ins = false
-            for (v in upPiece.ix until toList[upPiece.iy].count()) {
-                if (toList[upPiece.iy][v] == "") {
-                    toList[upPiece.iy].removeAt(v)
+            for (v in 0..upPiece.ix) {
+                if (toList[upPiece.iy][upPiece.ix - v] == "") {
+                    toList[upPiece.iy].removeAt(upPiece.ix - v)
                     ins = true
                     break
                 }
             }
-            //右方向に空きが無ければ左方向に空きを探す
+            //左方向に空きが無ければ右方向に空きを探す
             if (!ins) {
-                for (v in 0..upPiece.ix) {
-                    if (toList[upPiece.iy][upPiece.ix - v] == "") {
-                        toList[upPiece.iy].removeAt(upPiece.ix - v)
+                for (v in upPiece.ix until toList[upPiece.iy].count()) {
+                    if (toList[upPiece.iy][v] == "") {
+                        toList[upPiece.iy].removeAt(v)
                         ins = true
                         break
                     }
                 }
             }
+
+//            //挿入位置から右方向に空きを探す
+//            var ins = false
+//            for (v in upPiece.ix until toList[upPiece.iy].count()) {
+//                if (toList[upPiece.iy][v] == "") {
+//                    toList[upPiece.iy].removeAt(v)
+//                    ins = true
+//                    break
+//                }
+//            }
+//            //右方向に空きが無ければ左方向に空きを探す
+//            if (!ins) {
+//                for (v in 0..upPiece.ix) {
+//                    if (toList[upPiece.iy][upPiece.ix - v] == "") {
+//                        toList[upPiece.iy].removeAt(upPiece.ix - v)
+//                        ins = true
+//                        break
+//                    }
+//                }
+//            }
+
             //移動先に挿入、空きが無い場合は文字を戻し何も無かったことに
             if (ins) {
                 toList[upPiece.iy].add(upPiece.ix, insStr)

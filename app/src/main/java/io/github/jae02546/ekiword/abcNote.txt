@@ -4,9 +4,18 @@ versionCode 1
 versionName "1.0"
   初版
 
+20220911
 versionCode 2
 versionName "1.1"
-  Context.getThemeColor修正
+  Context.getThemeColor 修正
+  特定のデバイスで動作しない（異常終了）ので
+
+20220913
+versionCode 3
+versionName "1.2"
+  Tools.swapLastStateTblPiece 修正
+  文字交換位置に文字が有った場合の空き検索を左から右に変更
+
 
 
 
@@ -14,8 +23,8 @@ versionName "1.1"
 
 残作業
 
+左側から詰めたほうが良い?
 取説
-
 路線データ
 adViewのid取る
 アイコン
